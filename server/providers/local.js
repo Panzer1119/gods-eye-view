@@ -14,6 +14,7 @@ import { radioBrowserProxy } from './radio.js';
 import { gbfsProxy } from './gbfs.js';
 import { adsbLolProxy } from './aircraft/adsb-lol.js';
 import { aisLiveProxy } from './vessels/ais-live.js';
+import { lightningProxy } from './lightning.js';
 import { trackBackfillProxies } from './aircraft/tracks.js';
 import { openAiRealtimeProxy } from './openai.js';
 import { googlePlacesContextProxy } from './places.js';
@@ -38,6 +39,7 @@ function localProviderPlugins() {
     gbfsProxy(),
     adsbLolProxy(),
     aisLiveProxy(),
+    lightningProxy(),
     trackBackfillProxies(),
     openAiRealtimeProxy(),
     googlePlacesContextProxy(),
@@ -74,6 +76,7 @@ export { resolveOverpassPreflight } from './overpass/cache.js';
 export { overpassPayloadIsData } from './overpass/transport.js';
 export { fetchOverpassPayload } from './overpass/transport.js';
 export { openAiRealtimeProxy } from './openai.js';
+export { lightningProxy } from './lightning.js';
 export { MILITARY_INSTALLATION_ELEMENT_CAP } from './military-installations/constants.js';
 export { quantizeMilitaryInstallationBox } from './military-installations/query.js';
 export { militaryInstallationCacheKey } from './military-installations/query.js';

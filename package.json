@@ -74,6 +74,9 @@
     "./server/providers/live": {
       "node": "./server/providers/live.js"
     },
+    "./server/providers/lightning": {
+      "node": "./server/providers/lightning.js"
+    },
     "./sources/adsb-lol": "./src/data/adsbLolFallback.js",
     "./server/providers/places": {
       "node": "./server/providers/places.js"

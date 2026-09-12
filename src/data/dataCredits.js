@@ -49,6 +49,12 @@ export const DATA_CREDITS = [
       '<a href="https://aisstream.io" target="_blank" rel="noopener">AISStream.io</a>',
   },
   {
+    key: 'blitzortung',
+    html:
+      'Live lightning strikes: ' +
+      '<a href="https://www.blitzortung.org" target="_blank" rel="noopener">Blitzortung.org</a>',
+  },
+  {
     key: 'celestrak',
     html:
       'Satellites (TLEs): CelesTrak ' +

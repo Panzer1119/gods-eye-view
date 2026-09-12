@@ -53,10 +53,54 @@ test('live entry resolves in Node and aircraft normalization stays independently
   const entry = await import('gods-eye-view/server/providers/live');
   assert.equal(entry.openSkyProxy, providers.openSkyProxy);
   assert.equal(entry.aisLiveProxy, providers.aisLiveProxy);
+  assert.equal(entry.lightningProxy, providers.lightningProxy);
+  assert.equal(
+    entry.normalizeBlitzortungStrike,
+    providers.normalizeBlitzortungStrike,
+  );
   const normalizer = await import('gods-eye-view/sources/adsb-lol');
   assert.equal(
     normalizer.normalizeAdsbLolAircraftState,
     portable.normalizeAdsbLolAircraftState,
+  );
+});
+
+test('Blitzortung strike normalization keeps a bounded public wire shape', () => {
+  const strike = providers.normalizeBlitzortungStrike({
+    location: { latitude: 16.655639, longitude: -93.692215, altitude: 0 },
+    deviation: 11365,
+    delay: 3.9,
+    time: new Date('2026-09-12T22:42:22.250Z'),
+    detectors: [
+      { id: 2488 },
+      { id: 1234 },
+    ],
+    polarity: 0,
+    maxDeviation: 11365,
+    maxCircularGap: 265,
+    region: 3,
+  }, 7);
+  assert.deepEqual(strike, {
+    id: `${Date.parse('2026-09-12T22:42:22.250Z')}:${Math.round(16.655639 * 10_000)}:${Math.round(-93.692215 * 10_000)}:7`,
+    lat: 16.655639,
+    lon: -93.692215,
+    altitude: 0,
+    timeMs: Date.parse('2026-09-12T22:42:22.250Z'),
+    time: '2026-09-12T22:42:22.250Z',
+    deviation: 11365,
+    delay: 3.9,
+    detectors: 2,
+    polarity: 0,
+    maxDeviation: 11365,
+    maxCircularGap: 265,
+    region: 3,
+  });
+  assert.equal(
+    providers.normalizeBlitzortungStrike({
+      location: { latitude: 500, longitude: 0 },
+      time: new Date(),
+    }),
+    null,
   );
 });
 
