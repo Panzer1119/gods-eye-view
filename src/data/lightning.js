@@ -4,9 +4,8 @@ const LIGHTNING_API_URL = '/api/lightning';
 const LIGHTNING_UPDATE_MS = 5000;
 const LIGHTNING_MAX_AGE_MS = 20 * 60_000;
 const LIGHTNING_RENDER_LIMIT = 1200;
-const POSITIVE_COLOR = Cesium.Color.fromCssColorString('#ff7bf5');
-const NEGATIVE_COLOR = Cesium.Color.fromCssColorString('#63e8ff');
-const UNKNOWN_COLOR = Cesium.Color.fromCssColorString('#fff27a');
+const LATEST_STRIKE_COLOR = Cesium.Color.WHITE;
+const OLDEST_STRIKE_COLOR = Cesium.Color.RED;
 
 export function normalizeLightningRows(
   payload,
@@ -57,14 +56,12 @@ export function lightningPointSize(row) {
 export function lightningPointColor(row, nowMs = Date.now()) {
   const ageMs = Math.max(0, nowMs - Number(row?.timeMs || nowMs));
   const ageRatio = Math.min(1, ageMs / LIGHTNING_MAX_AGE_MS);
-  const alpha = 0.2 + (1 - ageRatio) * 0.75;
-  const polarity = normalizePolarity(row?.polarity);
-  const base = polarity === 1
-    ? POSITIVE_COLOR
-    : polarity === 0
-      ? NEGATIVE_COLOR
-      : UNKNOWN_COLOR;
-  return base.withAlpha(alpha);
+  return Cesium.Color.lerp(
+    LATEST_STRIKE_COLOR,
+    OLDEST_STRIKE_COLOR,
+    ageRatio,
+    new Cesium.Color(),
+  );
 }
 
 const lightningLayer = {

@@ -24,14 +24,17 @@ test('normalizeLightningRows keeps only valid, recent rows and sorts newest-firs
   assert.equal(rows[0].timeMs > rows[1].timeMs, true);
 });
 
-test('lightning point sizing and age alpha stay bounded', () => {
+test('lightning point sizing and age color gradient stay bounded', () => {
   const nowMs = 1_760_000_000_000;
   const fresh = { timeMs: nowMs - 1000, detectors: 16, polarity: 1, deviation: 3000 };
   const old = { timeMs: nowMs - 19 * 60_000, detectors: 1, polarity: 0, deviation: 30_000 };
 
   const freshColor = lightningPointColor(fresh, nowMs);
   const oldColor = lightningPointColor(old, nowMs);
-  assert.ok(freshColor.alpha > oldColor.alpha);
+  assert.ok(freshColor.green > oldColor.green);
+  assert.ok(freshColor.blue > oldColor.blue);
+  assert.equal(freshColor.red, 1);
+  assert.equal(oldColor.red, 1);
 
   const big = lightningPointSize({ detectors: 64, deviation: 1000 });
   const small = lightningPointSize({ detectors: 1, deviation: 30_000 });
