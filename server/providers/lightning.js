@@ -1,8 +1,8 @@
 import { createRequire } from 'node:module';
 import { clampInt } from './common/query.js';
 
-const DEFAULT_MAX_ROWS = 400;
-export const LIGHTNING_CACHE_MAX = 5000;
+const DEFAULT_MAX_ROWS = 5_000;
+export const LIGHTNING_CACHE_MAX = 20_000;
 export const LIGHTNING_RETENTION_MS = 20 * 60_000;
 const LIGHTNING_BACKOFF_MS = [2_000, 5_000, 15_000, 60_000];
 const LIGHTNING_TICK_MS = 15_000;

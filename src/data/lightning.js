@@ -1,11 +1,13 @@
 import * as Cesium from 'cesium';
 
 const LIGHTNING_API_URL = '/api/lightning';
-const LIGHTNING_UPDATE_MS = 5000;
+const LIGHTNING_UPDATE_MS = 500;
 const LIGHTNING_MAX_AGE_MS = 20 * 60_000;
-const LIGHTNING_RENDER_LIMIT = 1200;
-const LATEST_STRIKE_COLOR = Cesium.Color.WHITE;
-const OLDEST_STRIKE_COLOR = Cesium.Color.RED;
+const LIGHTNING_RENDER_LIMIT = 20_000;
+const LATEST_NEGATIVE_STRIKE_COLOR = Cesium.Color.LIGHTSKYBLUE;
+const OLDEST_NEGATIVE_STRIKE_COLOR = Cesium.Color.DARKBLUE;
+const LATEST_POSITIVE_STRIKE_COLOR = Cesium.Color.LIGHTPINK;
+const OLDEST_POSITIVE_STRIKE_COLOR = Cesium.Color.DARKRED;
 
 export function normalizeLightningRows(
   payload,
@@ -34,7 +36,6 @@ export function normalizeLightningRows(
       deviation: finiteOrNull(row?.deviation),
       delay: finiteOrNull(row?.delay),
       detectors: clampInt(row?.detectors, 0, 128, 0),
-      polarity: normalizePolarity(row?.polarity),
       region: Number.isInteger(row?.region) ? row.region : null,
     });
   }
@@ -57,8 +58,8 @@ export function lightningPointColor(row, nowMs = Date.now()) {
   const ageMs = Math.max(0, nowMs - Number(row?.timeMs || nowMs));
   const ageRatio = Math.min(1, ageMs / LIGHTNING_MAX_AGE_MS);
   return Cesium.Color.lerp(
-    LATEST_STRIKE_COLOR,
-    OLDEST_STRIKE_COLOR,
+    row?.polarity === 1 ? LATEST_POSITIVE_STRIKE_COLOR : LATEST_NEGATIVE_STRIKE_COLOR,
+    row?.polarity === 1 ? OLDEST_POSITIVE_STRIKE_COLOR : OLDEST_NEGATIVE_STRIKE_COLOR,
     ageRatio,
     new Cesium.Color(),
   );
